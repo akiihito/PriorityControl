@@ -1,0 +1,29 @@
+{
+    "sensors" : [
+        {
+            "name"  : "wifi",
+            "type"  : "radio",
+            "scope"  : {
+                "fov"   : "omnidirectional",
+                "range" : 5
+            }
+        },
+        {
+            "name"  : "lidar",
+            "type"  : "optical",
+            "scope"  : {
+                "fov"   : "omnidirectional",
+                "range" : 2.5
+            }
+        },
+        {
+            "name"  : "camera",
+            "type"  : "optical",
+            "scope"  : {
+                "fov"   : "directional",
+                "angle" : 60,
+                "range" : 8
+            }
+        }
+    ]
+}
