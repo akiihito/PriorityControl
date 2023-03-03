@@ -231,7 +231,7 @@ if __name__ == "__main__":
     max_length = len(in_scopes_by_time.keys())
     unit = clock_interval([float(x) for x in in_scopes_by_time.keys()])
     print(max_length, unit)
-
+    print(interaction_list)
     ##### それぞれの車両ごとにファイルを出力する
     ## 一度、高優先タスクに該当する車両だけファイル出力してみる
     for vinfo in interaction_list:
