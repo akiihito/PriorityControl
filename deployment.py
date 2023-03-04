@@ -8,6 +8,8 @@ parser.add_argument('-x', '--x', type=float, required=True, help='a max number o
 parser.add_argument('-y', '--y', type=float, required=True, help='a max number of x axis')
 parser.add_argument('-n', '--num', type=int, default=9, help='a number of machines')
 parser.add_argument('-t', '--trace', type=str, default="sumotrace.xml", help='a trace file generated from SUMO sim')
+parser.add_argument('-d', '--directory', type=str, default="locale", help='a directory to store the deployplan files for vehicles')
+
 
 args = parser.parse_args()
 
@@ -64,11 +66,79 @@ def splitmap(x: float, y: float, n: int):
             xstart = xend
         ystart = yend
 
-    return segments, xunit, yunit
+    return segments, xunit, yunit, int(s)
+
+
+def pos2dst(segments: list, xunit :float, yunit :float, matrix: int, _x: float, _y: float):
+    ## trimming
+    if _x < 0:
+        print("an outside value as a coordinate [x = %.2f], align to zero" % _x)
+        _x = 0.0
+    if _x > xunit * matrix:
+        print("an outside value as a coordinate [x = %.2f], align to max size" % _x)
+        _x = (xunit * matrix) - 0.1
+    if _y < 0:
+        print("an negative value as a coordinate [y = %.2f], align to zero" % _y)
+        _y = 0.0
+    if _y > yunit * matrix:
+        print("an outside value as a coordinate [y = %.2f], align to max size" % _y)
+        _y = (yunit * matrix) - 0.1
+
+    i = int(_x / xunit)
+    j = int(_y / yunit)
+
+    try:
+        node_id, seg = segments[j][i]
+    except:
+        print (i, j, xunit, yunit, _x, _y)
+    (xstart, xend, ystart, yend) = seg
+
+
+    if (xstart <= _x <= xend) and (ystart <= _y <= yend):
+        return node_id
+    if xend < _x:
+        i = (i + 1) % (matrix - 1)
+    else:
+        i = i - 1 if i > 0 else matrix - 1
+    if yend < _y:
+        j = (j + 1) % (matrix - 1)
+    else:
+        j = j - 1 if j > 0 else matrix - 1
+    node_id, seg = segments[j][i]
+    return node_id
+
 
 if __name__ == "__main__":
-    segments, xsize, ysize = splitmap(args.x, args.y, args.num)
-    print("xsize: %f, ysize %f" % (xsize, ysize))
+    ## split map to segments
+    segments, xunit, yunit, matrix = splitmap(args.x, args.y, args.num)
+    print("xunit size: %f, yunit size %f, matrix size %d" % (xunit, yunit, matrix))
 
+    ## assign a machine to each segment
+    machineIds = list(range(int(math.pow(matrix, 2))))
+    for i in range(int(matrix)):
+        for j in range(int(matrix)):
+            seg = segments[j][i]
+            segments[j][i] = (machineIds.pop(0), seg)
+
+    ## make the deploy plans for each vehicle
     trace = readtracefile(args.trace)
-    print(trace.keys())
+    locale = {}
+
+    time = [float(x) for x in trace.keys()]
+    #{'id': '0.0', 'x': 598.4, 'y': 216.53, ...}
+    for t in time:
+        vehicles = trace[format(t, '.2f')]
+        for v in vehicles:
+            _id = v['id']
+            _x  = v['x']
+            _y  = v['y']
+            node = pos2dst(segments, xunit, yunit, matrix, _x, _y)
+
+            if _id in locale.keys():
+                locale[_id].append([t, node])
+            else:
+                locale[_id] = [[t, node]]
+        if t > 1:
+            break
+
+    print(locale)
