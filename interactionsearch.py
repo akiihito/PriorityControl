@@ -36,7 +36,7 @@ def readequiplist(filename):
 
 def readtracefile(filename):
     ret = {}
-    tree = ET.parse(args.sumofile)
+    tree = ET.parse(filename)
     for i in tree.iter(tag="timestep"):
         vlist = []
         for j in i.iter(tag="vehicle"):
