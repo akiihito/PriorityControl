@@ -211,8 +211,8 @@ if __name__ == "__main__":
     in_scopes_by_time = {}
     for t in trace.keys():
         ## for test
-        if t == "20.00":
-            break
+        #if t == "20.00":
+        #    break
         ## 各車両の距離を計算する（最大探索距離以上の計算結果は排除）
         in_range = distance_bw_vehicles(trace[t], maxrange_per_vehicle)
         ## 測定される側の車両がセンサーの探索範囲にいるか調べる
@@ -233,6 +233,7 @@ if __name__ == "__main__":
     unit = clock_interval([float(x) for x in in_scopes_by_time.keys()])
     print(max_length, unit)
     print(interaction_list)
+    print(len(interaction_list))
     ##### それぞれの車両ごとにファイルを出力する
     ## 一度、高優先タスクに該当する車両だけファイル出力してみる
     for vinfo in interaction_list:
