@@ -154,7 +154,8 @@ if __name__ == "__main__":
         with open(args.outdir + "/" + outfile, "w") as f:
             for l in plan:
                 t, node_id = l
-                lines.append("{:.2f}".format(t) + ", " + str(node_id) + "\n")
+                #lines.append("{:.2f}".format(t) + ", " + str(node_id) + "\n")
+                lines.append(str(node_id) + "\n")
 
             ## remove the linefeed at the tail
             lines = lines[0:-1] + [lines[-1].replace("\n", "")]

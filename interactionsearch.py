@@ -245,10 +245,12 @@ if __name__ == "__main__":
             i = 0.00
             while i < max_length:
                 if i < t:
-                    ## SUMOの
-                    lines.append("{:.2f}".format(i) + ", 0\n") # high priority
+                    ## SUMOの時刻フォーマットに合わせる
+                    #lines.append("{:.2f}".format(i) + ", 0\n") # high priority
+                    lines.append("0\n") # low priority
                 else:
-                    lines.append("{:.2f}".format(i) + ", 1\n") # low priority
+                    #lines.append("{:.2f}".format(i) + ", 1\n") # low priority
+                    lines.append("1\n") # low priority
                 i += unit
             ## 最後の改行を削除
             lines = lines[0:-1] + [lines[-1].replace("\n", "")]
