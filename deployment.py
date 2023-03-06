@@ -1,3 +1,4 @@
+import os
 from xml.etree import cElementTree as ET
 import argparse
 import math
@@ -8,7 +9,7 @@ parser.add_argument('-x', '--x', type=float, required=True, help='a max number o
 parser.add_argument('-y', '--y', type=float, required=True, help='a max number of x axis')
 parser.add_argument('-n', '--num', type=int, default=9, help='a number of machines')
 parser.add_argument('-t', '--trace', type=str, default="sumotrace.xml", help='a trace file generated from SUMO sim')
-parser.add_argument('-d', '--directory', type=str, default="locale", help='a directory to store the deployplan files for vehicles')
+parser.add_argument('-o', '--outdir', type=str, default="locale", help='a directory to store the deployplan files for vehicles')
 
 
 args = parser.parse_args()
@@ -138,7 +139,23 @@ if __name__ == "__main__":
                 locale[_id].append([t, node])
             else:
                 locale[_id] = [[t, node]]
-        if t > 1:
-            break
 
-    print(locale)
+    ## make the output directory if not exist
+    if not os.path.exists(args.outdir):
+        os.makedirs(args.outdir)
+
+    ## output the deployement plan
+    for _id in locale.keys():
+        lines = []
+        outfile = "vehicle" + str(int(float(_id)))
+        plan = locale[_id]
+        print(outfile)
+        print(plan)
+        with open(args.outdir + "/" + outfile, "w") as f:
+            for l in plan:
+                t, node_id = l
+                lines.append("{:.2f}".format(t) + ", " + str(node_id) + "\n")
+
+            ## remove the linefeed at the tail
+            lines = lines[0:-1] + [lines[-1].replace("\n", "")]
+            f.writelines(lines)
