@@ -210,6 +210,7 @@ if __name__ == "__main__":
 
     in_scopes_by_time = {}
     for t in trace.keys():
+        ## for test
         if t == "20.00":
             break
         ## 各車両の距離を計算する（最大探索距離以上の計算結果は排除）
@@ -240,12 +241,13 @@ if __name__ == "__main__":
         outfile = "vehicle" + str(int(float(_id)))
         lines = []
         with open(args.outdir + "/" + outfile, "w") as f:
-            i = 0.0
+            i = 0.00
             while i < max_length:
                 if i < t:
-                    lines.append("0\n") # high priority
+                    ## SUMOの
+                    lines.append("{:.2f}".format(i) + ", 0\n") # high priority
                 else:
-                    lines.append("1\n") # low priority
+                    lines.append("{:.2f}".format(i) + ", 1\n") # low priority
                 i += unit
             ## 最後の改行を削除
             lines = lines[0:-1] + [lines[-1].replace("\n", "")]
