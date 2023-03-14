@@ -7,7 +7,7 @@
 
     <grid_network>
         <grid value="true"/>
-        <grid.number value="10"/>
+        <grid.number value="21"/>
     </grid_network>
 
     <junctions>

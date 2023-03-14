@@ -85,28 +85,18 @@ def pos2dst(segments: list, xunit :float, yunit :float, matrix: int, _x: float, 
         print("an outside value as a coordinate [y = %.2f], align to max size" % _y)
         _y = (yunit * matrix) - 0.1
 
-    i = int(_x / xunit)
-    j = int(_y / yunit)
+    ysize = len(segments)
+    xsize = len(segments[0])
 
-    try:
-        node_id, seg = segments[j][i]
-    except:
-        print (i, j, xunit, yunit, _x, _y)
-    (xstart, xend, ystart, yend) = seg
+    for i in range(xsize):
+        for j in range(ysize):
+            node_id, boundary = segments[j][i]
+            xmin, xmax, ymin, ymax = boundary
+            if (xmin <= _x < xmax+1) and (ymin <= _y < ymax+1):
+                return node_id
 
-
-    if (xstart <= _x <= xend) and (ystart <= _y <= yend):
-        return node_id
-    if xend < _x:
-        i = (i + 1) % (matrix - 1)
-    else:
-        i = i - 1 if i > 0 else matrix - 1
-    if yend < _y:
-        j = (j + 1) % (matrix - 1)
-    else:
-        j = j - 1 if j > 0 else matrix - 1
-    node_id, seg = segments[j][i]
-    return node_id
+    print("ERROR!!", _x, _y)
+    os._exit()
 
 
 if __name__ == "__main__":
@@ -120,6 +110,8 @@ if __name__ == "__main__":
         for j in range(int(matrix)):
             seg = segments[j][i]
             segments[j][i] = (machineIds.pop(0), seg)
+
+    print(segments)
 
     ## make the deploy plans for each vehicle
     trace = readtracefile(args.trace)
