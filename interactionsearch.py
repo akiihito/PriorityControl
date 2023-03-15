@@ -231,6 +231,7 @@ if __name__ == "__main__":
 
     max_length = len(in_scopes_by_time.keys())
     unit = clock_interval([float(x) for x in in_scopes_by_time.keys()])
+
     print(max_length, unit)
     print(interaction_list)
     print(len(interaction_list))
@@ -251,6 +252,23 @@ if __name__ == "__main__":
                 else:
                     #lines.append("{:.2f}".format(i) + ", 1\n") # low priority
                     lines.append("1\n") # low priority
+                i += unit
+            ## 最後の改行を削除
+            lines = lines[0:-1] + [lines[-1].replace("\n", "")]
+            f.writelines(lines)
+
+
+    ##低優先タスクに該当する車両をファイル出力する
+    all_vehicles = list(equips.keys())
+    related_vehicles = [i[0] for i in interaction_list]
+
+    for _id in [v for v in all_vehicles if v not in related_vehicles]:
+        outfile = "vehicle" + str(int(float(_id)))
+        lines = []
+        with open(args.outdir + "/" + outfile, "w") as f:
+            i = 0.00
+            while i < max_length:
+                lines.append("1\n") # low priority
                 i += unit
             ## 最後の改行を削除
             lines = lines[0:-1] + [lines[-1].replace("\n", "")]
