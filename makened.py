@@ -96,14 +96,3 @@ if __name__ == '__main__':
         for i in connections:
             f.write("\t\t\t" + i + "\n")
         f.write(tail)
-
-# vehicles_submodules = ""
-# for v in vehicles:
-#     vehicles_submodules = vehicles_submodules + '''
-#         %s: FileBasedSource{
-#         }''' % v
-
-# vehicles_connections = ""
-# for v in vehicles:
-#     vehicles_connections = vehicles_connections + '''
-#         %s.out --> classifier%d.in++;''' % (v, 1)

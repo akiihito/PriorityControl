@@ -22,18 +22,23 @@
   (-f <sumo trace file> -e <vehicle's equipment file> -s <sensor spec file> -t <a target vehicle ID>)
   (<sensor spec file> has already prepared. Do not modify)
 
-5. Copy the files in results and locale directory to inputs directory at Omnet++ samples
+5. make a ned file of Omnet++
+    > python makened.py -c 2 -n 2 -o output.ned -d results
+  (-c <a number of CPUs in one node> -n <a number of nodes> -o <ned filename> -d <directory contains the output files from interactionsearch.py (optional)>)
+
+6. Copy the files in results and locale directory to inputs directory at Omnet++ samples
     > mv .\results ..\omnetpp-6.0\samples\interaction-search\inputs
     > mv .\locale ..\omnetpp-6.0\samples\interaction-search\inputs
+    > mv test.ned ..\omnetpp-6.0\samples\interaction-search\
     (The location of inputs directory depends on the place you put omnet++ files)
 
-6. Run Omnet++ command line from mingw shortcut in omnet directory
+7. Run Omnet++ command line from mingw shortcut in omnet directory
     > C:\Users\kohig\Works\omnetpp-6.0\mingwenv.cmd
 
-7. Run Omnet++ simulation
+8. Run Omnet++ simulation
     > cd \Users\kohig\Works\omnetpp-6.0\samples\interaction-search
     > opp_run -m -u Cmdenv -c General -n . -n ../queueinglib -l ../queueinglib/libqueueinglib.dll priorityControl.ini
 
-8. Acquire Result files
+9. Acquire Result files
     Omnet++ simulation(Sequence.6) generates result files that record several parameters of Sink Object in Omnet++ simulation.
     
